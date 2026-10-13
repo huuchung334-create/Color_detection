@@ -1,10 +1,9 @@
 import cv2
-import numpy as np  # Không dùng trực tiếp: lọc ảnh chuyển sang detect_orange_ball.
-from black_dectection import get_limits          # get_orange_limits, detect_orange_ball
+import numpy as np  
+from color_detection import get_limits          # get_orange_limits, detect_orange_ball
 
-# Truyền ba tham số theo thứ tự B, G, R của mẫu màu cam.
 color=[72,66,159]  # màu đỏ
-camera = cv2.VideoCapture(0)  # nguồn camera
+camera = cv2.VideoCapture(1)  # nguồn camera
 
 ret = True  # đọc camera thành công trả true >< false
 location_old = None  # ví trí cũ của vật
