@@ -9,11 +9,10 @@ def reset():
     print("NOT DETECTED")
 
 
-color=[78,65,150]  # màu đỏ
+color=[75,50,125]  # màu đỏ tươi
 camera = cv2.VideoCapture(1)  # nguồn camera
 
 ret = True  # đọc camera thành công trả true >< false
-location_new = None
 location_old = None  # ví trí cũ của vật
 trajectory   = [] # list quỹ đạo
 while ret :
@@ -23,6 +22,8 @@ while ret :
         break
 
     # XỬ LÍ ẢNH 
+
+   # print(frame.shape)
 
     frame_hsv = cv2.cvtColor(frame , cv2.COLOR_BGR2HSV)   # chuyển về màu hssv
 
@@ -42,14 +43,17 @@ while ret :
             y=y1+(h//2)
             location_new=(x,y)     # tọa độ tâm mới
 
-            trajectory.append((x,y))
+            trajectory.append((x,y))  # thêm tọa độ mới
 
             # tính độ dịch chuyển 
             if location_old is not None:   # từ lần thứ 2 đọc tâm trở đi
                d1=location_new[0]-location_old[0]
                d2=location_new[1]-location_old[1]
                dx=(d1**2 + d2**2)**0.5     # độ dịch chuyển
-               cv2.putText(frame , f"Độ dịch chuyển {dx:.2f}" , (30,30) ,cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0) , 1)
+               if dx<=5 :
+                cv2.putText(frame , "STATE : STILL" , (30,30) ,cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0) , 1)
+               else:
+                cv2.putText(frame , "STATE : MOVING" , (30,30) ,cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0) , 1)
             location_old=location_new
 
             # vẽ chữ tọa độ vật
@@ -61,6 +65,7 @@ while ret :
             # vẽ tâm
             cv2.circle(frame,(x,y),5,(255,0,0),-1)
 
+            # đường đi 
             for i in range(len(trajectory)-1):
                 cv2.line(frame,trajectory[i],trajectory[i+1],(255,0,0),1)
 
